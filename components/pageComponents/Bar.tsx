@@ -6,7 +6,7 @@ import img3 from "../../assets/Placeholder-3-1.png";
 import img4 from "../../assets/Placeholder-4-1.png";
 import img5 from "../../assets/Placeholder-5-1.png";
 import img6 from "../../assets/Placeholder-3-1.png";
-import { Button } from "../ui/button";
+
 import Link from "next/link";
 
 type BarContentType = {
