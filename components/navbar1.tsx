@@ -72,14 +72,15 @@ const Navbar1 = ({
       title: "Tutors",
       url: "/all-tutors"
     },
-    {
-      title: "Dashboard",
-      url: "/dashboard"
-    },
-    {
+      {
       title: "Blog",
       url: "/blogs",
     },
+    {
+      title: "Dashboard",
+      url: "/dashboard"
+    }
+  
   ],
   auth = {
     login: { title: "Login", url: "/login" },
@@ -89,7 +90,7 @@ const Navbar1 = ({
 }: Navbar1Props) => {
   return (
     <section className={cn("py-4", className)}>
-      <div className="w-full px-12">
+      <div className="w-full  top-0 px-12">
         {/* Desktop Menu */}
         <nav className="hidden items-center justify-between lg:flex">
           <div className="flex items-center gap-6">
