@@ -23,7 +23,7 @@ export function LoginForm({
 
   const [loading , setLoading] = useState(false)
 
-  const {register , handleSubmit , reset} = useForm()
+  const {register , handleSubmit , reset} = useForm<{email : string , password: string }>()
 
   const onSubmit = async(data : {email : string , password: string }) =>{
     setLoading(true)

@@ -9,7 +9,7 @@ import {
   FieldLabel,
   FieldSeparator,
 } from "@/components/ui/field"
-import { set, useForm } from "react-hook-form"
+import {  useForm } from "react-hook-form"
 import { Input } from "@/components/ui/input"
 import SignupImage from "../assets/register_image.png"
 import Image from "next/image"
@@ -25,7 +25,12 @@ export function SignupForm({
 
 
   const [loading , setLoading] = useState(false)
-  const { register, handleSubmit , reset} = useForm()
+  const { register, handleSubmit , reset} = useForm<{
+    username: string,
+    email: string,
+    password: string,
+    confirmPassword: string
+  }>()
 
 
   const onSubmit = async(data: {
