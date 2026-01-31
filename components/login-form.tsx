@@ -1,3 +1,4 @@
+"use client"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -12,16 +13,41 @@ import { Input } from "@/components/ui/input"
 import Link from "next/link"
 import SignupImage from "../assets/register_image.png"
 import Image from "next/image"
+import { useForm } from "react-hook-form"
+import { useState } from "react"
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+
+  const [loading , setLoading] = useState(false)
+
+  const {register , handleSubmit , reset} = useForm()
+
+  const onSubmit = async(data : {email : string , password: string }) =>{
+    setLoading(true)
+    const signInResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/sign-in/email`, {
+      method: "POST",
+      headers: {
+         "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(data)
+
+    })
+    if(signInResponse){
+      setLoading(false)
+      reset()
+    }
+
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8">
+          <form onSubmit={handleSubmit(onSubmit)} className="p-6 md:p-8">
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-2xl font-bold">Welcome back</h1>
@@ -32,6 +58,7 @@ export function LoginForm({
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
+                {...register("email")}
                   id="email"
                   type="email"
                   placeholder="m@example.com"
@@ -48,10 +75,10 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" type="password" required />
+                <Input {...register("password")} id="password" type="password" required />
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
+                <Button type="submit">{loading ? "Loading...": "Login"}</Button>
               </Field>
               <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
                 Or continue with

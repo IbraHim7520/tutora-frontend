@@ -1,3 +1,4 @@
+"use client"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -8,19 +9,61 @@ import {
   FieldLabel,
   FieldSeparator,
 } from "@/components/ui/field"
+import { set, useForm } from "react-hook-form"
 import { Input } from "@/components/ui/input"
 import SignupImage from "../assets/register_image.png"
 import Image from "next/image"
 import Link from "next/link"
+import toast from "react-hot-toast"
+import { useState } from "react"
+
+
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+
+
+  const [loading , setLoading] = useState(false)
+  const { register, handleSubmit , reset} = useForm()
+
+
+  const onSubmit = async(data: {
+    username: string,
+    email: string,
+    password: string,
+    confirmPassword: string
+  }) => {
+     setLoading(true)
+    if (!data.password.includes(data.confirmPassword)) {
+      return toast.error("Password didn't matched!")
+    }
+    const signupdData = {
+      name: data.username,
+      email: data.email,
+      password: data.password
+    }
+    const signupResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/sign-up/email`, {
+      method: "POST",
+      headers: {
+         "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(signupdData)
+
+    })
+    if(signupResponse){
+      setLoading(false)
+      reset
+    }
+    
+  }
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden p-0">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8">
+          <form onSubmit={handleSubmit(onSubmit)} className="p-6 md:p-8">
             <FieldGroup>
               <div className="flex flex-col items-center gap-2 text-center">
                 <h1 className="text-2xl font-bold">Create your account</h1>
@@ -31,6 +74,7 @@ export function SignupForm({
               <Field>
                 <FieldLabel htmlFor="username">Username</FieldLabel>
                 <Input
+                  {...register("username")}
                   id="username"
                   type="text"
                   placeholder="username"
@@ -40,6 +84,7 @@ export function SignupForm({
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
+                  {...register("email")}
                   id="email"
                   type="email"
                   placeholder="email@example.com"
@@ -50,13 +95,13 @@ export function SignupForm({
                 <Field className="grid grid-cols-2 gap-4">
                   <Field>
                     <FieldLabel htmlFor="password">Password</FieldLabel>
-                    <Input id="password" type="password" required />
+                    <Input {...register("password")} id="password" type="password" required />
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="confirm-password">
                       Confirm Password
                     </FieldLabel>
-                    <Input id="confirm-password" type="password" required />
+                    <Input {...register("confirmPassword")} id="confirm-password" type="password" required />
                   </Field>
                 </Field>
                 <FieldDescription>
