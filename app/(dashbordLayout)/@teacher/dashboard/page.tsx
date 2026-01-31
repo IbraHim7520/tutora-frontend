@@ -1,11 +1,11 @@
 import React from 'react';
 
-const BLogpage = () => {
+const page = () => {
     return (
         <div>
-            this is blog page
+            this is teacher dashbord
         </div>
     );
 };
 
-export default BLogpage;
+export default page;
