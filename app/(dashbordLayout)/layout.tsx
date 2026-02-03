@@ -1,13 +1,15 @@
-import  { ReactNode } from 'react';
+import  { ReactNode, use } from 'react';
 import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
 import {
   SidebarInset,
   SidebarProvider,
 } from "@/components/ui/sidebar"
+import { getUserData } from '@/lib/getCookie';
 
-import data from "../dashboard/data.json"
-const Dashbordlayout = ({admin , teacher , user}: {admin : ReactNode , teacher: ReactNode , user: ReactNode}) => {
+const Dashbordlayout = async({admin , teacher , user}: {admin : ReactNode , teacher: ReactNode , user: ReactNode}) => {
+
+  const userData = await getUserData()
     return (
          <SidebarProvider
       style={
@@ -17,13 +19,13 @@ const Dashbordlayout = ({admin , teacher , user}: {admin : ReactNode , teacher: 
         } as React.CSSProperties
       }
     >
-      <AppSidebar variant="inset" />
+      <AppSidebar  variant="inset" />
       <SidebarInset>
         <SiteHeader />
             <div>
-                {admin}
-                {user}
-                {teacher}
+                {
+                  userData.role === "user"? user : userData.role === "admin" ? admin :  teacher
+                }
             </div>
       </SidebarInset>
     </SidebarProvider>

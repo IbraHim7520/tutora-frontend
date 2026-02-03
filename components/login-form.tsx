@@ -15,6 +15,7 @@ import SignupImage from "../assets/register_image.png"
 import Image from "next/image"
 import { useForm } from "react-hook-form"
 import { useState } from "react"
+import { authClient } from "@/lib/auth-client"
 
 export function LoginForm({
   className,
@@ -42,6 +43,9 @@ export function LoginForm({
     }
 
   }
+
+  const session = authClient.useSession();
+  console.log(session?.data?.user)
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
