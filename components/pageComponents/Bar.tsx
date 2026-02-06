@@ -73,7 +73,7 @@ const BottomHeroBar = () => {
       </div>
 
       {/* CARDS */}
-      <div className="container px-12  mt-12 grid grid-cols-1  lg:grid-cols-2 2xl:grid-cols-3 gap-5 justify-items-center">
+      <div className="container mx-auto px-12  mt-12 grid grid-cols-1  lg:grid-cols-2 2xl:grid-cols-3 gap-5 justify-items-center">
         {BarContents.map((content) => (
           <BarCard
             key={content.id}

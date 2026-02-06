@@ -1,9 +1,9 @@
-import React from 'react';
+import DashbordInterface from "@/components/pageComponents/DashbordInterface";
 
 const UserDashboardPage = () => {
     return (
         <div>
-            user
+            <DashbordInterface></DashbordInterface>
         </div>
     );
 };

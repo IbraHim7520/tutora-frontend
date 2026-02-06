@@ -3,7 +3,8 @@ export const getUserData = async() =>{
 
     try {
     const browserCookies = await cookies();
-    const res = await fetch(`${process.env.NEXT_BACKEND_URL}/api/auth/get-session` , {
+   
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/get-session` , {
         headers: {
             cookie : browserCookies.toString()
         },
@@ -12,7 +13,7 @@ export const getUserData = async() =>{
     const data = await res.json();
     return data?.user
     } catch (error) {
-        return {data: {}}
+        return {error ,data: {}}
     }
 
 }

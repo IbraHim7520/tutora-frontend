@@ -1,4 +1,4 @@
-import  { ReactNode, use } from 'react';
+import  { ReactNode } from 'react';
 import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
 import {
@@ -6,6 +6,7 @@ import {
   SidebarProvider,
 } from "@/components/ui/sidebar"
 import { getUserData } from '@/lib/getCookie';
+import { Role } from '@/lib/RoleType';
 
 const Dashbordlayout = async({admin , teacher , user}: {admin : ReactNode , teacher: ReactNode , user: ReactNode}) => {
 
@@ -24,7 +25,7 @@ const Dashbordlayout = async({admin , teacher , user}: {admin : ReactNode , teac
         <SiteHeader />
             <div>
                 {
-                  userData.role === "user"? user : userData.role === "admin" ? admin :  teacher
+                  userData.role === Role.student? user : userData.role === Role.admin ? admin :  teacher
                 }
             </div>
       </SidebarInset>

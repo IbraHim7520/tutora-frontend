@@ -15,7 +15,9 @@ import SignupImage from "../assets/register_image.png"
 import Image from "next/image"
 import { useForm } from "react-hook-form"
 import { useState } from "react"
-import { authClient } from "@/lib/auth-client"
+import { Spinner } from "./ui/spinner"
+import { useRouter } from "next/navigation"
+import toast from "react-hot-toast"
 
 export function LoginForm({
   className,
@@ -23,12 +25,13 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
 
   const [loading , setLoading] = useState(false)
-
+  const navigate = useRouter()
   const {register , handleSubmit , reset} = useForm<{email : string , password: string }>()
 
   const onSubmit = async(data : {email : string , password: string }) =>{
     setLoading(true)
-    const signInResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/sign-in/email`, {
+    try {
+      const signInResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/sign-in/email`, {
       method: "POST",
       headers: {
          "Content-Type": "application/json",
@@ -37,15 +40,25 @@ export function LoginForm({
       body: JSON.stringify(data)
 
     })
-    if(signInResponse){
+    if(signInResponse.ok){
       setLoading(false)
       reset()
+      navigate.push("/")
+      toast.success("Login Successfull.")
+
+    }else{
+      setLoading(false)
+      reset()
+      toast.error("Failed to Signup!")
+    }
+    } catch (err) {
+      setLoading(false)
+      reset()
+      console.log(err)
+      toast.error("Failed to Signup!")
     }
 
   }
-
-  const session = authClient.useSession();
-  console.log(session?.data?.user)
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -82,7 +95,7 @@ export function LoginForm({
                 <Input {...register("password")} id="password" type="password" required />
               </Field>
               <Field>
-                <Button type="submit">{loading ? "Loading...": "Login"}</Button>
+                <Button type="submit">{loading ? <Spinner></Spinner> : "Login"}</Button>
               </Field>
               <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
                 Or continue with

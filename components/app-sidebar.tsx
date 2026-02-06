@@ -1,14 +1,11 @@
 "use client";
 
-import { MdDashboard, MdAnalytics , MdReviews  } from "react-icons/md";
-import { FaBookOpenReader } from "react-icons/fa6";
+import { MdDashboard, MdAnalytics, MdReviews } from "react-icons/md";
+import { FaBookOpenReader, FaUsers } from "react-icons/fa6";
 import { IoMdPerson } from "react-icons/io";
 import { SiSession } from "react-icons/si";
-
-import { FaUsers } from "react-icons/fa";
-
 import * as React from "react";
-
+import logoImage from "../assets/logo-removebg-preview.png";
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
 import {
@@ -17,12 +14,11 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
 import useUserData from "@/hooks/useUserData";
-import { Skeleton } from "./ui/skeleton";
+import Image from "next/image";
 
 const TeacherNavItem = [
   { title: "Dashboard", url: "/dashboard", icon: MdDashboard  },
@@ -33,10 +29,9 @@ const TeacherNavItem = [
   { title: "Rating & Reviews", url: "/dashboard/ratings", icon: MdReviews   },
 ];
 
-
 const UserNavItem = [
   { title: "Dashboard", url: "/dashboard", icon: MdDashboard  },
-  { title: "My-Sessions", url: "/dashboard/my-sessions", icon: FaBookOpenReader  },
+  { title: "My-Sessions", url: "/dashboard/user-booked-session", icon: FaBookOpenReader  },
   { title: "Profile", url: "/dashboard/profile", icon: IoMdPerson  },
 ];
 
@@ -48,22 +43,59 @@ const AdminNavItem = [
 ];
 
 export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
-  const { user, loading, authenticated } = useUserData();
+  const { user, loading } = useUserData();
 
-  // 👇 flat array
-  const navMain = user?.role === "teacher" ? TeacherNavItem : user?.role === "admin" ? AdminNavItem : UserNavItem ;
+  const getNavItems = () => {
+    if (!user) return UserNavItem;
+    const role = user.role?.toLowerCase();
+
+    if (role === "teacher" ) {
+      return TeacherNavItem;
+    }
+    if (role === "admin") {
+      return AdminNavItem;
+    }
+    return UserNavItem;
+  };
+
+  const navMain = getNavItems();
+
+  // 2. Handle Loading State 
+  // If loading, you might want to show a skeleton or return null 
+  // to prevent "UserNavItem" from flashing for an Admin.
+  if (loading) {
+    return (
+      <Sidebar {...props}>
+        <SidebarContent>
+           <div className="p-4 space-y-4">
+              <div className="h-8 w-full animate-pulse bg-gray-400 rounded" />
+              <div className="h-8 w-full animate-pulse bg-gray-400 rounded" />
+              <div className="h-8 w-full animate-pulse bg-gray-400 rounded" />
+              <div className="h-8 w-full animate-pulse bg-gray-400 rounded" />
+              <div className="h-8 w-full animate-pulse bg-gray-400 rounded" />
+              <div className="h-8 w-full animate-pulse bg-gray-400 rounded" />
+              <div className="h-8 w-full animate-pulse bg-gray-400 rounded" />
+           </div>
+        </SidebarContent>
+      </Sidebar>
+    );
+  }
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild />
+             <div className="flex items-center gap-2 px-4 py-2">
+              <Image src={logoImage} alt={"tutora-logo"} width={30} height={30} quality={100} priority ></Image>
+                <span className="font-bold">Tutora</span>
+             </div>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
 
       <SidebarContent>
+        {/* Pass the dynamic items here */}
         <NavMain items={navMain} />
       </SidebarContent>
 

@@ -1,8 +1,8 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
-import { useEffect, useState } from "react";
 
+// Tip: Usually auth-client types are exported, but we'll keep your interface
 interface UserType {
   id: string;
   createdAt: Date;
@@ -10,25 +10,21 @@ interface UserType {
   email: string;
   emailVerified: boolean;
   name: string;
+  role: string;
   image?: string | null;
 }
 
 const useUserData = () => {
-  const session = authClient.useSession(); // 👈 Hook top-level এ
-  const [user, setUser] = useState<UserType | null>(null);
+  const { data: session, isPending, error } = authClient.useSession();
 
-  useEffect(() => {
-    if (session?.data?.user) {
-      setUser(session.data.user as UserType);
-    } else {
-      setUser(null);
-    }
-  }, [session?.data?.user]);
+  const user = session?.user ? (session.user as UserType) : null;
+  const authenticated = !!session?.user;
 
   return {
     user,
-    loading: session.isPending,   // better UX
-    authenticated: !!session?.data?.user,
+    loading: isPending,
+    authenticated,
+    error, 
   };
 };
 

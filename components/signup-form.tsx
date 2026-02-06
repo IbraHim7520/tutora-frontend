@@ -16,11 +16,13 @@ import Image from "next/image"
 import Link from "next/link"
 import toast from "react-hot-toast"
 import { useState } from "react"
+import { Spinner } from "./ui/spinner"
+import { useRouter } from "next/navigation"
 
 
 export function SignupForm({role, className, ...props}: React.ComponentProps<"div">) {
 
-
+  const navigate = useRouter()
   const [loading , setLoading] = useState(false)
   const { register, handleSubmit , reset} = useForm<{
     username: string,
@@ -37,29 +39,44 @@ export function SignupForm({role, className, ...props}: React.ComponentProps<"di
     password: string,
     confirmPassword: string,
     role : string
-  }) => {
-     setLoading(true)
-    if (!data.password.includes(data.confirmPassword)) {
-      return toast.error("Password didn't matched!")
-    }
-    const signupdData = {
-      name: data.username,
-      email: data.email,
-      password: data.password,
-      role : role
-    }
-    const signupResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/sign-up/email`, {
-      method: "POST",
-      headers: {
-         "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(signupdData)
-    })
-    if(signupResponse){
-      setLoading(false)
-      reset
-    }
+    }) => {
+      setLoading(true)
+        if (!data.password.includes(data.confirmPassword)) {
+          return toast.error("Password didn't matched!")
+        }
+
+        const signupdData = {
+          name: data.username || "N/A",
+          email: data.email,
+          password: data.password,
+          role : role || "student"
+        }
+
+        try {
+          const signupResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/sign-up/email`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(signupdData)
+        })
+        if(signupResponse.ok){
+          setLoading(false)
+          reset()
+          toast.success("Signup Successfull.");
+          navigate.push("/");
+        }else{
+          setLoading(false)
+          reset()
+          toast.error("Failed to create account!")
+        }
+        } catch (error) {
+          setLoading(false)
+          reset()
+          console.log(error)
+          toast.error("Failed to create account!")
+        }
     
   }
 
@@ -115,7 +132,7 @@ export function SignupForm({role, className, ...props}: React.ComponentProps<"di
               </Field>
               <Field>
                 <Button  type="submit">
-                  {loading ? "Loading...": "Create Account"}
+                  {loading ? <Spinner></Spinner>: "Create Account"}
                 </Button>
               </Field>
               <FieldSeparator className="*:data-[slot=field-separator-content]:bg-card">
