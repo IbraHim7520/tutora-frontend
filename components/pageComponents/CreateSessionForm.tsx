@@ -1,7 +1,8 @@
 "use client";
+
 import { UploadCloud, Calendar, Clock, BookOpen, Users, Info, ChevronDown } from "lucide-react";
 import { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { SubmitHandler, useForm, useWatch } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Spinner } from "../ui/spinner";
 
@@ -12,14 +13,17 @@ interface SessionFormData {
   FromTime: string;
   ToTime: string;
   MaxStudents: number;
-  Image: string;
+  Image: FileList | string;
   Description: string;
 }
 
 const CreateSessionForm = () => {
-  const { register, handleSubmit, reset, watch } = useForm<SessionFormData>();
+  const { register, handleSubmit, reset , control } = useForm<SessionFormData>();
   const [loading, setLoading] = useState(false);
-  const selectedImage = watch("Image");
+  const selectedImage = useWatch({
+  control,
+  name: "Image",
+});
 
   const onSubmit: SubmitHandler<SessionFormData> = async (data) => {
     setLoading(true);
@@ -174,7 +178,7 @@ const CreateSessionForm = () => {
                     <UploadCloud className="size-8 text-sky-600" />
                   </div>
                   <span className="mt-3 text-sm font-medium text-slate-600">
-                    {selectedImage?.[0]?.name ? selectedImage[0].name : "Click to upload banner image"}
+                    {selectedImage && typeof selectedImage !== "string" && selectedImage[0]?.name ? selectedImage[0].name : "Click to upload banner image"}
                   </span>
                   <span className="text-xs text-slate-400 mt-1">PNG, JPG or WebP (Max 5MB)</span>
                   <input {...register("Image")} type="file" className="hidden" />

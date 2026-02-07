@@ -101,7 +101,7 @@ const DashbordInterface = () => {
             </p>
           </div>
           <div className="mt-8 pt-6 border-t border-sky-200 flex items-center justify-between text-sky-800 font-medium italic">
-            <span>"Education is the most powerful weapon."</span>
+            <span>Education is the most powerful weapon.</span>
             <BookOpen size={20} className="opacity-50" />
           </div>
         </div>

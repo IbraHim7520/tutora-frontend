@@ -2,8 +2,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import SessionCard from '@/components/pageComponents/SessionCard';
 
-
-const SingleTeacherSessionPage = async ({ params }: { params: Promise<{ id: string }> }) => {
+type Props = {
+  params: {
+    id: string;
+  };
+};
+const SingleTeacherSessionPage = async ({ params }: Props) => {
   const { id } = await params;
   
   
@@ -95,7 +99,7 @@ const SingleTeacherSessionPage = async ({ params }: { params: Promise<{ id: stri
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {
-              sessions.map(session  => <SessionCard
+              sessions.map((session: typeof sessions[number])  => <SessionCard
                  key={session.id}
                   session={session}
                   teacherEmail={teacher?.email}

@@ -147,9 +147,9 @@ const UsersProfile = () => {
       } else {
         toast.error(resultData.message || "Update failed");
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Profile update failed:", error);
-      toast.error(error.message || "An error occurred");
+      toast.error("An error occurred");
     } finally {
       setIsSubmitting(false);
     }
@@ -175,7 +175,7 @@ const UsersProfile = () => {
       <div className="mx-auto max-w-4xl">
         <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
           
-          <div className="relative h-40 bg-gradient-to-r from-sky-600 via-blue-700 to-indigo-800">
+          <div className="relative h-40 bg-linear-to-r from-sky-600 via-blue-700 to-indigo-800">
             <div className="absolute -bottom-16 left-8">
               <div className="relative size-32 rounded-3xl border-4 border-white bg-slate-100 shadow-xl overflow-hidden">
                 <Image
@@ -370,7 +370,15 @@ const UsersProfile = () => {
   );
 };
 
-const StatCard = ({ icon, label, value, color, bg }: any) => (
+interface StatCardProps {
+  icon: React.ReactNode;
+  label: string;
+  value?: number | string | null;
+  color?: string;
+  bg?: string;
+}
+
+const StatCard = ({ icon, label, value, color, bg }: StatCardProps) => (
   <div className="flex items-center gap-4 rounded-2xl border border-slate-100 bg-white p-4 shadow-sm hover:border-slate-300 transition-colors">
     <div className={`flex size-12 items-center justify-center rounded-xl ${bg} ${color}`}>
       {icon}

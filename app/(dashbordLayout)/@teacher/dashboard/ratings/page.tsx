@@ -1,6 +1,14 @@
 import { cookies } from "next/headers";
 import Image from "next/image";
 
+type Review = {
+  id: string;
+  user?: { name?: string; image?: string } | null;
+  teachingsession?: { date?: string; name?: string } | null;
+  rating?: number;
+  opinion?: string | null;
+};
+
 const RatingAndReviewspage = async () => {
   const cookieDatas = await cookies();
   const cookieStore = cookieDatas.toString();
@@ -17,7 +25,7 @@ const RatingAndReviewspage = async () => {
   );
 
   const result = await response.json();
-  const reviews = result?.data || [];
+  const reviews: Review[] = result?.data || [];
 
   return (
     <div className="p-8 max-w-6xl mx-auto">
@@ -27,7 +35,7 @@ const RatingAndReviewspage = async () => {
         <p className="text-gray-500">No reviews yet.</p>
       ) : (
         <div className="grid md:grid-cols-2 gap-6">
-          {reviews.map((review: any) => (
+          {reviews.map((review) => (
             <div
               key={review.id}
               className="bg-white rounded-2xl border shadow-sm p-5 flex gap-4"
@@ -36,7 +44,7 @@ const RatingAndReviewspage = async () => {
               <div className="shrink-0">
                 <Image
                   src={review.user?.image || "/avatar.png"}
-                  alt={review.user?.name}
+                  alt={review.user?.name || "Avatar"}
                   width={48}
                   height={48}
                   className="rounded-full object-cover"
@@ -48,7 +56,9 @@ const RatingAndReviewspage = async () => {
                 <div className="flex items-center justify-between">
                   <h3 className="font-semibold">{review.user?.name}</h3>
                   <span className="text-sm text-gray-500">
-                    {new Date(review.teachingsession?.date).toLocaleDateString()}
+                    {review.teachingsession?.date
+                      ? new Date(review.teachingsession.date).toLocaleDateString()
+                      : ""}
                   </span>
                 </div>
 
@@ -63,7 +73,7 @@ const RatingAndReviewspage = async () => {
                 <div className="flex items-center gap-1 mb-2">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <span key={i}>
-                      {i < review.rating ? "⭐" : "☆"}
+                      {i < (review.rating ?? 0) ? "⭐" : "☆"}
                     </span>
                   ))}
                 </div>
