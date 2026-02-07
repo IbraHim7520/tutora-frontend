@@ -1,10 +1,11 @@
-import React from 'react';
+import UsersProfile from '@/components/pageComponents/UsersProfile';
+
 
 const AdminProfilepage = () => {
+
+
     return (
-        <div>
-          admin profile page  
-        </div>
+        <UsersProfile></UsersProfile>
     );
 };
 

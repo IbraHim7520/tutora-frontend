@@ -1,10 +1,10 @@
+import DashbordInterface from "@/components/pageComponents/DashbordInterface";
 
-const page = () => {
+const AdminUsersPage = async() => {
+
     return (
-        <div>
-            this is admin dashbord
-        </div>
+        <DashbordInterface></DashbordInterface>
     );
 };
 
-export default page;
+export default AdminUsersPage;
